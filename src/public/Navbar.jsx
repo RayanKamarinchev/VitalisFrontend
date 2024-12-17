@@ -1,0 +1,56 @@
+import React from 'react';
+import {Link, NavLink} from "react-router-dom";
+import logo from './logo.jpg'
+import pfp from './pfp.png'
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+
+const Navbar = () => {
+  let isUserLogged = localStorage["token"] !== undefined;
+  return (
+      <header className="p-3 mb-3 border-bottom">
+        <div className="container">
+          <div className="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+            <a href="/"
+               className="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none pe-4">
+              <img src={logo} height="50" width="50" className="rounded-circle"/>
+              <span className="fs-3 fw-medium ms-2">Vitalis</span>
+            </a>
+            
+            <ul className="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0 fs-5">
+              <li><NavLink to="/" className="nav-link px-2">Molecule info</NavLink></li>
+            </ul>
+            {
+              isUserLogged ?
+                  <div className="dropdown text-end">
+                    <a href="#" className="d-block link-body-emphasis text-decoration-none dropdown-toggle"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                      <img src={pfp} alt="mdo" width="40" height="40" className="rounded-circle"/>
+                    </a>
+                    <ul className="dropdown-menu text-small">
+                      <li><a className="dropdown-item" href="#">New project...</a></li>
+                      <li><a className="dropdown-item" href="#">Settings</a></li>
+                      <li><a className="dropdown-item" href="#">Profile</a></li>
+                      <li>
+                        <hr className="dropdown-divider"/>
+                      </li>
+                      <li><a className="dropdown-item" href="#">Sign out</a></li>
+                    </ul>
+                  </div>
+                  :
+                  <Link to="/login" className="btn btn-primary">Login <FontAwesomeIcon icon="fa-solid fa-right-to-bracket" /></Link>
+            }
+          
+          </div>
+        </div>
+      </header>
+      // <nav classNameName="navbar">
+      //     <h1>Book store</h1>
+      //     <div classNameName="links">
+      //         <Link to="/">Home</Link>
+      //         <Link to="/create">New Blog</Link>
+      //     </div>
+      // </nav>
+  );
+};
+
+export default Navbar;
