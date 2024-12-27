@@ -1,16 +1,18 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from "axios";
+import ReactionArrow from "./ReactionArrow";
+import '../css/home.css';
+import ReactionList from "./ReactionList";
 
 const Home = () => {
-  const apiBaseUrl = process.env.REACT_APP_API_BASE_URL
+  let lastCompound = "<cml><MDocument></MDocument></cml>"
+  const [reactions, setReactions] = useState([])
+  const [reaction, setReaction] = useState()
   
+  let sketcher, iframe;
   const onLoad = () => {
-    if (window.marvin && window.marvin.Sketch) {
-      window.marvin.sketcherInstance = new window.marvin.Sketch("sketch");
-      window.marvin.Sketch.license("")
-    } else {
-      console.log("Cannot initiate sketcher. Current browser may not support HTML5 canvas or may run in Compatibility Mode.");
-    }
+    iframe = document.getElementById("iframe")
+    sketcher = iframe.contentWindow.marvin.sketcherInstance
   };
   
   useEffect(() => {
@@ -27,25 +29,40 @@ const Home = () => {
     
     loadScript("./marvinjs/gui/gui.nocache.js", () => {
       console.log("gui.nocache.js loaded");
-      setTimeout(() => {
-        onLoad();
-        let sketch = document.getElementById("sketch")
-        if(sketch) {
-          sketch.id = "usedSketcher"
-        }
-      }, 1000);
     });
+    setTimeout(() => {
+          onLoad();
+          }, 1000);
     
-    return () => {
-      const scripts = document.querySelectorAll('script[src="/marvinjs/lib/promise-1.0.0.min.js"], script[src="/marvinjs/gui/gui.nocache.js"]');
-      scripts.forEach((script) => script.remove());
+    const intervalFunction = async () => {
+      let drawnCompound = await sketcher.exportStructure("mrv")
+        if (lastCompound !== drawnCompound) {
+          await axios.post("https://openbabel.cheminfo.org/v1/convert", {
+            input: drawnCompound,
+            inputFormat: "mrv -- Chemical Markup Language",
+            outputFormat: "smi -- SMILES format"
+          }).then(async (res) => {
+            let compound = res.data.result.substring(0, res.data.result.indexOf('\t'))
+            console.log(compound)
+            let reactionsResponse = (await axios.get(process.env.REACT_APP_API_BASE_URL + "mol/getReactions?reactant=" + compound)).data
+            setReactions(reactionsResponse);
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+        }
+      lastCompound = drawnCompound;
     };
+    
+    const intervalId = setInterval(intervalFunction, 2000);
+    
+    return () => clearInterval(intervalId);
   }, []);
   
   const resRef = React.useRef(null);
   
   async function getMol() {
-    let res = await window.marvin.sketcherInstance.exportStructure("mrv")
+    let res = await sketcher.exportStructure("mrv")
     //TODO: handle undefined res
     await console.log(res)
     await axios.post("https://openbabel.cheminfo.org/v1/convert", {
@@ -58,12 +75,33 @@ const Home = () => {
       resRef.current.innerText = result.substring(0, result.indexOf('\t'))
     })
     
+    await axios.p
   }
   
   return (
       <div>
-        <p>hello</p>
-        <div id="sketch" style={{height: "500px", width: "500px"}}></div>
+        <div className="container text-center">
+          <div className="row align-items-start" style={{height: "450px"}}>
+            <iframe id="iframe" src="./marvinjs/editor.html"
+                    style={{overflow: "hidden", width: "500px", height: "450px", border: " 1px solid darkgray"}}
+                    className="col-5"/>
+            <div className="align-items-start col-2 reaction-container d-flex align-items-center">
+              {
+                !reaction ? (
+                    <ReactionList reactions={reactions} setReaction={setReaction}/>
+                ) : (
+                    <ReactionArrow
+                        reagent={reaction.reagent}
+                        catalyst={reaction.catalyst}
+                        conditions={reaction.conditions}
+                        followUp={reaction.followUp}
+                        reagentVisualised={reaction.reagentVisualised}
+                    />
+                )
+              }
+            </div>
+          </div>
+        </div>
         <button onClick={getMol}>Get Mol</button>
         <p id="res" ref={resRef}></p>
       </div>

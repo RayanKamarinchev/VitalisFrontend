@@ -1,7 +1,5 @@
 import React from 'react';
 import {Link, NavLink} from "react-router-dom";
-import logo from './logo.jpg'
-import pfp from './pfp.png'
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 const Navbar = () => {
@@ -12,11 +10,11 @@ const Navbar = () => {
           <div className="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
             <a href="/"
                className="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none pe-4">
-              <img src={logo} height="50" width="50" className="rounded-circle"/>
-              <span className="fs-3 fw-medium ms-2">Vitalis</span>
+              <img src="/logo/logo.png" height="50" width="200"/>
             </a>
             
             <ul className="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0 fs-5">
+              <li><NavLink to="/" className="nav-link px-2">Reaction predictor</NavLink></li>
               <li><NavLink to="/" className="nav-link px-2">Molecule info</NavLink></li>
             </ul>
             {
@@ -24,7 +22,7 @@ const Navbar = () => {
                   <div className="dropdown text-end">
                     <a href="#" className="d-block link-body-emphasis text-decoration-none dropdown-toggle"
                        data-bs-toggle="dropdown" aria-expanded="false">
-                      <img src={pfp} alt="mdo" width="40" height="40" className="rounded-circle"/>
+                      <img src="" alt="mdo" width="40" height="40" className="rounded-circle"/>
                     </a>
                     <ul className="dropdown-menu text-small">
                       <li><a className="dropdown-item" href="#">New project...</a></li>
@@ -37,7 +35,8 @@ const Navbar = () => {
                     </ul>
                   </div>
                   :
-                  <Link to="/login" className="btn btn-primary">Login <FontAwesomeIcon icon="fa-solid fa-right-to-bracket" /></Link>
+                  <Link to="/login" className="btn btn-primary">Login <FontAwesomeIcon
+                      icon="fa-solid fa-right-to-bracket"/></Link>
             }
           
           </div>

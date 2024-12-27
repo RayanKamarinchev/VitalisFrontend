@@ -1,0 +1,21 @@
+.reaction-btn{
+    outline: none;
+    border: none;
+}
+
+.reaction-btn:hover{
+    background-color: #f6f6f6;
+}
+
+.reaction-btn:active{
+    background-color: #eaeaea !important;
+}
+
+.reaction-container{
+    height: 100%;
+}
+
+.reaction-list{
+    height: 100%;
+    overflow: auto;
+}
