@@ -7,6 +7,7 @@ import AuthProvider from "./user/AuthProvider";
 import PrivateRoute from "./user/PrivateRoute";
 import TestHomePage from "./tests/TestHomePage";
 import Login from "./user/Login";
+import Tests from "./Tests";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
               <Routes>
                 <Route exact path="/" element={<Home/>}/>
                 <Route exact path="/tests" element={<PrivateRoute><TestHomePage/></PrivateRoute>}/>
+                <Route path="/tests/*" element={<Tests/>}/>
                 {/*<Route exact path="/books" element={<AllBooks/>}/>*/}
                 <Route exact path="/login" element={<Login/>}/>
                 {/*<Route exact path="/register" element={<Register/>}/>*/}

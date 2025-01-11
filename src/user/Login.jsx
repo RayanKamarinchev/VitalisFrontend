@@ -1,5 +1,6 @@
 import { useState } from "react";
 import {useAuth} from "./AuthProvider";
+import {emailRegex} from "../util/constants";
 
 const Login = () => {
   const [input, setInput] = useState({
@@ -13,7 +14,6 @@ const Login = () => {
   })
   
   const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   }
   
