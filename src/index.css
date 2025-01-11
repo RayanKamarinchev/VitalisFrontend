@@ -44,3 +44,16 @@ hr{
   border-top: 2px solid ;
   margin: 0;
 }
+
+.form-group{
+  align-items: start;
+  display: flex;
+  flex-direction: column;
+  margin-top: 15px;
+  font-size: 1.2rem;
+}
+
+.list-group{
+    margin-top: 15px;
+  font-size: 1.2rem;
+}
