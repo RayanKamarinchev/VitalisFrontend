@@ -1,9 +1,12 @@
 import React from 'react';
 import {Link, NavLink} from "react-router-dom";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {useAuth} from "../user/AuthProvider";
 
 const Navbar = () => {
   let isUserLogged = localStorage["token"] !== undefined;
+  const auth = useAuth();
+  
   return (
       <header className="p-3 mb-3 border-bottom">
         <div className="container">
@@ -33,6 +36,7 @@ const Navbar = () => {
                       </li>
                       <li><a className="dropdown-item" href="#">Sign out</a></li>
                     </ul>
+                    <button className="btn btn-primary" onClick={() => auth.logOut()}>Log out</button>
                   </div>
                   :
                   <Link to="/login" className="btn btn-primary">Login <FontAwesomeIcon

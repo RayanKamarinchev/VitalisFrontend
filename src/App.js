@@ -1,24 +1,31 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import Home from './home/Home'
 import './App.css';
 import Navbar from "./public/Navbar";
 import Footer from "./public/Foorer";
+import AuthProvider from "./user/AuthProvider";
+import PrivateRoute from "./user/PrivateRoute";
+import TestHomePage from "./tests/TestHomePage";
+import Login from "./user/Login";
 
 function App() {
   return (
       <Router>
-        <div className="App">
-          <Navbar/>
-          <div className="content">
-            <Routes>
-              <Route exact path="/" element={<Home/>}/>
-              {/*<Route exact path="/books" element={<AllBooks/>}/>*/}
-              {/*<Route exact path="/login" element={<Login/>}/>*/}
-              {/*<Route exact path="/register" element={<Register/>}/>*/}
-            </Routes>
+        <AuthProvider>
+          <div className="App">
+            <Navbar/>
+            <div className="content">
+              <Routes>
+                <Route exact path="/" element={<Home/>}/>
+                <Route exact path="/tests" element={<PrivateRoute><TestHomePage/></PrivateRoute>}/>
+                {/*<Route exact path="/books" element={<AllBooks/>}/>*/}
+                <Route exact path="/login" element={<Login/>}/>
+                {/*<Route exact path="/register" element={<Register/>}/>*/}
+              </Routes>
+            </div>
+            <Footer/>
           </div>
-          <Footer/>
-        </div>
+        </AuthProvider>
       </Router>
   );
 }
