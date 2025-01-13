@@ -1,7 +1,7 @@
 import React from 'react';
-import {urlBuilder} from "../util/urlBuilder";
 import {useAuth} from "../user/AuthProvider";
 import {Link} from "react-router-dom";
+import {urlBuilder} from "../util/utils";
 
 function TestList({tests}) {
   const auth = useAuth();

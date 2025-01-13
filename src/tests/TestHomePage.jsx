@@ -1,7 +1,7 @@
 import React from 'react';
 import {Link} from "react-router-dom";
 import TestList from "./TestList";
-import {urlBuilder} from "../util/urlBuilder";
+import {urlBuilder} from "../util/utils";
 
 function TestHomePage({model}) {
   let paginationStart = Math.max(1, model.currentPage - 3);

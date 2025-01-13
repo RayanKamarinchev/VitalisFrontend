@@ -8,6 +8,7 @@ import PrivateRoute from "./user/PrivateRoute";
 import TestHomePage from "./tests/TestHomePage";
 import Login from "./user/Login";
 import Tests from "./Tests";
+import Register from "./user/Register";
 
 function App() {
   return (
@@ -18,10 +19,10 @@ function App() {
             <div className="content">
               <Routes>
                 <Route exact path="/" element={<Home/>}/>
-                <Route exact path="/tests" element={<PrivateRoute><TestHomePage/></PrivateRoute>}/>
-                <Route path="/tests/*" element={<Tests/>}/>
+                <Route path="/tests/*" element={<PrivateRoute><Tests/></PrivateRoute>}/>
                 {/*<Route exact path="/books" element={<AllBooks/>}/>*/}
                 <Route exact path="/login" element={<Login/>}/>
+                <Route exact path="/register" element={<Register/>}/>
                 {/*<Route exact path="/register" element={<Register/>}/>*/}
               </Routes>
             </div>

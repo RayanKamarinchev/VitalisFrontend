@@ -1,94 +1,70 @@
-import { useState } from "react";
+import {useState} from "react";
 import {useAuth} from "./AuthProvider";
-import {emailRegex} from "../util/constants";
+import '../css/login.css'
+import {Link} from "react-router-dom";
 
 const Login = () => {
   const [input, setInput] = useState({
     email: "",
     password: "",
+    rememberMe: false
   });
-  const [errors, setErrors] = useState({
-    email: "",
-    password: "",
-    general: "",
-  })
-  
-  const validateEmail = (email) => {
-    return emailRegex.test(email);
-  }
+  const [error, setError] = useState("")
   
   const handleInput = (e) => {
-    const { name, value } = e.target;
+    const {name, value} = e.target;
     setInput((prev) => ({
       ...prev,
       [name]: value,
     }));
-    setErrors({ ...errors, [name]: '' });
+    setError("");
   };
   
   const auth = useAuth();
-  const handleSubmitEvent = (e) => {
+  const handleSubmitEvent = async (e) => {
     e.preventDefault();
-    
-    let isValid = true;
-    let newErrors = { email: '', password: '', general: '' };
-    
-    if (!input.email) {
-      newErrors.email = 'Email is required';
-      isValid = false;
-    } else if (!validateEmail(input.email)) {
-      newErrors.email = 'Invalid email format';
-      isValid = false;
-    }
-    
-    if (!input.password) {
-      newErrors.password = 'Password is required';
-      isValid = false;
-    } else if (input.password.length < 8) {
-      newErrors.password = 'Password must be at least 8 characters';
-      isValid = false;
-    }
-    
-    if (!isValid) {
-      setErrors(newErrors);
-      return;
-    }
-    auth.loginAction(input);
-    
-    setErrors({ email: '', password: '', general: '' });
-    setInput({ email: '', password: '' });
-    
+    setError(await auth.loginAction(input));
   };
   
   return (
-      <form onSubmit={handleSubmitEvent}>
-        <div className="form_control">
-          <label htmlFor="user-email">Email:</label>
-          <input
-              type="email"
-              id="user-email"
-              name="email"
-              placeholder="example@yahoo.com"
-              aria-describedby="user-email"
-              aria-invalid="false"
-              onChange={handleInput}
-          />
-          {errors.email && <span className="text-danger">{errors.email}</span>}
+      <div className="d-lg-flex half">
+        <div className="bg order-1 order-md-2"
+             style={{backgroundImage: "url('/chemistry.jpg')"}}></div>
+        <div className="contents order-2 order-md-1">
+          <div className="container">
+            <div className="row  justify-content-center">
+              <div className="col-md-7 mt-5">
+                <h3>Login to <strong>Vitalis</strong></h3>
+                <p className="mb-4">Lorem ipsum dolor sit amet elit. Sapiente sit aut eos consectetur adipisicing.</p>
+                <form onSubmit={handleSubmitEvent}>
+                  <div className="form-group first">
+                    <label htmlFor="email">Email</label>
+                    <input type="text" className="form-control" placeholder="" id="email" name="email"
+                           onChange={handleInput}/>
+                  </div>
+                  <div className="form-group last mb-3">
+                    <label htmlFor="password">Password</label>
+                    <input type="password" className="form-control" placeholder="" id="password" name="password"
+                           onChange={handleInput}/>
+                  </div>
+                  <div className="d-flex mb-5 align-items-center">
+                    <label className=" mb-0">
+                      <input type="checkbox" className="form-check-input me-1"/>
+                      <span className="caption">Remember me</span>
+                    </label>
+                    <span className="ml-auto"><a href="#" className="forgot-pass">Forgot Password</a></span>
+                  </div>
+                  <div className="d-flex mb-5 flex-column text-start">
+                    <p>Dont have an account? <Link to='/register'>Register</Link></p>
+                    {error && <p className="text-danger">{error}</p>}
+                  </div>
+                  <input type="submit" value="Log In" className="btn btn-block btn-primary"/>
+                </form>
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="form_control">
-          <label htmlFor="password">Password:</label>
-          <input
-              type="password"
-              id="password"
-              name="password"
-              aria-describedby="user-password"
-              aria-invalid="false"
-              onChange={handleInput}
-          />
-          {errors.email && <span className="text-danger">{errors.email}</span>}
-        </div>
-        <button className="btn-submit">Submit</button>
-      </form>
+      </div>
   );
 };
 

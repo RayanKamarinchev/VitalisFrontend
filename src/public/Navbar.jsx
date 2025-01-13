@@ -19,25 +19,13 @@ const Navbar = () => {
             <ul className="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0 fs-5">
               <li><NavLink to="/" className="nav-link px-2">Reaction predictor</NavLink></li>
               <li><NavLink to="/" className="nav-link px-2">Molecule info</NavLink></li>
+              {
+                isUserLogged && <li><NavLink to="/tests" className="nav-link px-2">Tests</NavLink></li>
+              }
             </ul>
             {
               isUserLogged ?
-                  <div className="dropdown text-end">
-                    <a href="#" className="d-block link-body-emphasis text-decoration-none dropdown-toggle"
-                       data-bs-toggle="dropdown" aria-expanded="false">
-                      <img src="" alt="mdo" width="40" height="40" className="rounded-circle"/>
-                    </a>
-                    <ul className="dropdown-menu text-small">
-                      <li><a className="dropdown-item" href="#">New project...</a></li>
-                      <li><a className="dropdown-item" href="#">Settings</a></li>
-                      <li><a className="dropdown-item" href="#">Profile</a></li>
-                      <li>
-                        <hr className="dropdown-divider"/>
-                      </li>
-                      <li><a className="dropdown-item" href="#">Sign out</a></li>
-                    </ul>
-                    <button className="btn btn-primary" onClick={() => auth.logOut()}>Log out</button>
-                  </div>
+                  <button className="btn btn-primary" onClick={() => auth.logOut()}>Log out</button>
                   :
                   <Link to="/login" className="btn btn-primary">Login <FontAwesomeIcon
                       icon="fa-solid fa-right-to-bracket"/></Link>

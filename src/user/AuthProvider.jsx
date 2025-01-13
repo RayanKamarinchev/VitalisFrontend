@@ -6,22 +6,22 @@ const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem("site") || "");
+  const [token, setToken] = useState(localStorage.getItem("token") || "");
   const navigate = useNavigate();
   const loginAction = async (data) => {
     try {
-      const response = axios.post("/auth/login", data);
-      const res = await response.json();
+      const res = await axios.post(process.env.REACT_APP_API_BASE_URL + "auth/login", data);
       if (res.data) {
+        console.log(res.data)
         setUser(res.data.user);
-        setToken(res.token);
-        localStorage.setItem("token", res.token);
+        setToken(res.data.token);
+        localStorage.setItem("token", res.data.token);
         navigate("/");
-        return;
+        return "";
       }
       throw new Error(res.message);
     } catch (err) {
-      console.error(err);
+      return "Invalid email or password";
     }
   };
   

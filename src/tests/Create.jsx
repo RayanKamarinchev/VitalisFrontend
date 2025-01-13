@@ -1,12 +1,13 @@
 import React, {useState} from 'react';
 import FormInput from "../public/FormInput";
-import {groups, grades, minTestTitleLength, maxTestTitleLength, formChoiceIdentifier} from "../util/constants";
+import {groups, grades, formChoiceIdentifier} from "../util/constants";
 import FormSelect from "../public/FormSelect";
 import FormTextarea from "../public/FormTextarea";
 import {inBetween} from "../util/validation";
 import FormChoice from "../public/FormChoice";
 import FormCheckbox from "../public/FormCheckbox";
 import axios from "axios";
+import {convertKeysToLowercase} from "../util/utils";
 
 function Create(props) {
   const [input, setInput] = useState({
@@ -48,21 +49,12 @@ function Create(props) {
     
     try {
       const response = await axios.post(process.env.REACT_APP_API_BASE_URL + 'tests/create', input);
-      console.log(response);
     } catch (error) {
       let respErrors = error.response.data.errors
       respErrors = convertKeysToLowercase(respErrors)
-      console.log(respErrors)
       setErrors(respErrors)
     }
   }
-  function convertKeysToLowercase(obj) {
-    return Object.keys(obj).reduce((acc, key) => {
-      acc[key.toLowerCase()] = obj[key];
-      return acc;
-    }, {});
-  }
-  
   return (
       <div className="row">
         <div className="col-sm-12 offset-lg-2 col-lg-8 offset-xl-4 col-xl-4">
