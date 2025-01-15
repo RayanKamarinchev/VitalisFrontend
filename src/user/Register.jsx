@@ -2,7 +2,7 @@ import {useState} from "react";
 import '../css/login.css'
 import {Link, useNavigate} from "react-router-dom";
 import axios from "axios";
-import {convertKeysToLowercase} from "../util/utils";
+import {convertKeysToLowercase, submitForm} from "../util/utils";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -32,6 +32,8 @@ const Register = () => {
   
   const handleSubmitEvent = async (e) => {
     e.preventDefault();
+    await submitForm('auth/register', input, setErrors)
+    navigate('/login')
     try {
       await axios.post(process.env.REACT_APP_API_BASE_URL + 'auth/register', input)
       navigate("/login")
@@ -51,14 +53,14 @@ const Register = () => {
   };
   
   return (
-      <div className="d-lg-flex half">
+      <div className="d-lg-flex half login">
         <div className="bg order-1 order-md-2"
              style={{backgroundImage: "url('/chemistry.jpg')"}}></div>
         <div className="contents order-2 order-md-1">
         <div className="container">
             <div className="row justify-content-center">
               <div className="col-md-7 mt-5 mb-5">
-                <h3>Register to <strong>Vitalis</strong></h3>
+                <h3>Register to <strong style={{fontSize: "inherit"}}>Vitalis</strong></h3>
                 <p className="mb-4">Lorem ipsum dolor sit amet elit. Sapiente sit aut eos consectetur adipisicing.</p>
                 <form onSubmit={handleSubmitEvent}>
                   <div className="form-group first">

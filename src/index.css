@@ -1,3 +1,20 @@
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  /*font-family: "Montserrat";*/
+  font-size: calc(15px + 0.390625vw);
+}
+@media screen and (min-width: 768px) {
+  *,
+  *::after,
+  *::before {
+    font-size: 18px
+  }
+}
+
 :root {
   --primary-color: #237866;
   --primary-color-dark: #1e6959;
@@ -56,4 +73,8 @@ hr{
 .list-group{
     margin-top: 15px;
   font-size: 1.2rem;
+}
+
+a{
+  text-decoration: none;
 }

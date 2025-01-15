@@ -3,13 +3,16 @@ import FormInput from "../public/FormInput";
 import {groups, grades, formChoiceIdentifier} from "../util/constants";
 import FormSelect from "../public/FormSelect";
 import FormTextarea from "../public/FormTextarea";
-import {inBetween} from "../util/validation";
 import FormChoice from "../public/FormChoice";
 import FormCheckbox from "../public/FormCheckbox";
-import axios from "axios";
-import {convertKeysToLowercase} from "../util/utils";
+import {submitForm} from "../util/utils";
+import {useNavigate} from "react-router-dom";
+import {useAuth} from "../user/AuthProvider";
 
 function Create(props) {
+  const navigate = useNavigate();
+  const auth = useAuth();
+  
   const [input, setInput] = useState({
     isPublic: false,
     title: "",
@@ -31,33 +34,26 @@ function Create(props) {
     } else if (value === 'off') {
       value = false
     }
-    setInput((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setInput({...input, [name]: value})
     setErrors({...errors, [name]: ''});
   };
   
   const [errors, setErrors] = useState({
-    email: "",
-    password: "",
+    title: "",
+    description: "",
     general: "",
   })
   
   async function handleSubmitEvent(e) {
     e.preventDefault();
-    
-    try {
-      const response = await axios.post(process.env.REACT_APP_API_BASE_URL + 'tests/create', input);
-    } catch (error) {
-      let respErrors = error.response.data.errors
-      respErrors = convertKeysToLowercase(respErrors)
-      setErrors(respErrors)
+    let resp = await submitForm('tests/create', input, setErrors, auth.token);
+    if (resp){
+      navigate(resp.data)
     }
   }
   return (
       <div className="row">
-        <div className="col-sm-12 offset-lg-2 col-lg-8 offset-xl-4 col-xl-4">
+        <div className="col-sm-12 offset-lg-2 col-lg-8 offset-xl-4 col-xl-4 mb-5">
           <form onSubmit={handleSubmitEvent}>
             <FormCheckbox name="isPublic" text="Is public" errors={errors} handleInput={handleInput}/>
             <FormInput name="title" text="Title" errors={errors} handleInput={handleInput}/>

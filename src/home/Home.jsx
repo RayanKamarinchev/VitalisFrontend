@@ -24,7 +24,10 @@ const Home = () => {
   }
   
   useEffect(() => {
-    if (document.readyState == 'complete') {
+    if (document.readyState === 'complete') {
+      console.log("here")
+      console.log(document.getElementById("iframe").readyState)
+      console.log(document.getElementById("iframe"))
       loadSketcher();
     } else {
       document.onreadystatechange = function () {

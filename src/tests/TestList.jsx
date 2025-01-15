@@ -5,59 +5,66 @@ import {urlBuilder} from "../util/utils";
 
 function TestList({tests}) {
   const auth = useAuth();
-  
+  console.log(tests[0])
+  console.log(auth.user)
   return (
       <>
         {
           tests.map(t => (
               //converted to jsx
-              <div className={"card mb-3"}>
-                <div className={"card-header d-flex align-items-center"}>
-                  <h6 className={"mb-0"}>{t.title} - {t.grade} клас</h6>
+              <div className={"card card-margin"}>
+                <div className={"card-header no-border"}>
+                  <h5 className={"card-title"}>{t.title} - {t.grade} клас</h5>
                 </div>
-                <div className={"card-body"}>
-                  <div className={"d-flex align-items-center mb-3"}>
-                    <div
-                        className={"bg-primary text-white rounded-circle d-flex flex-column align-items-center justify-content-center p-3"}
-                        style={{width: "4rem", height: "4rem"}}>
-                      <span className={"fw-bold fs-5"}>{`${t.averageScore.toFixed(2)}`}</span>
+                <div className={"card-body pt-0"}>
+                  <div className={"widget-49"}>
+                    <div className={"widget-49-title-wrapper"}>
+                      <div className={"widget-49-date-primary"}
+                           style={{width: "4rem", height: "4rem"}}>
+                        <span className={"widget-49-date-day"}>{`${t.averageScore.toFixed(2)}`}</span>
+                      </div>
+                      <div className={"widget-49-meeting-info"}>
+                        <small className={"widget-49-meeting-time"}>{t.createdOn}</small>
+                      </div>
                     </div>
-                    <div className={"ms-3"}>
-                      <h6 className={"mb-0"}>{t.groups}</h6>
-                      <small className={"text-muted"}>{t.createdOn}</small>
-                    </div>
-                  </div>
-                  <ul className={"list-unstyled mb-3"}>
-                    <li>Въпроси: <strong>{(t.openQuestions.length + t.closedQuestions.length)}</strong>
-                    </li>
-                    <li>Време: <strong>{t.time} мин</strong></li>
-                    <li>
-                      {t.isCreator ? (
-                          <Link className={"text-decoration-underline text-muted"}
-                                to={urlBuilder("/examiners", {
-                                  testId: t.Id
-                                })}>
-                            Предали: <strong>{t.examiners}</strong>
-                          </Link>
+                    <ol className={"widget-49-meeting-points text-start"}>
+                      <h6 className={"widget-49-pro-title"}>{t.groups}</h6>
+                      <li className={"widget-49-meeting-item"}>
+                        <span>Въпроси: <strong>{(t.questionsCount)}</strong></span>
+                      </li>
+                      <li className={"widget-49-meeting-item"}>
+                        <span>Време: <strong>{t.time} мин</strong></span>
+                      </li>
+                      <li className={"widget-49-meeting-item"}>
+                        {t.isCreator ? (
+                            <Link className={"text-decoration-underline"}
+                                  to={urlBuilder("/examiners", {
+                                    testId: t.id
+                                  })}>
+                              Предали: <strong>{t.examiners}</strong>
+                            </Link>
+                        ) : (
+                            <p>Предали: <strong>{t.examiners}</strong></p>
+                        )}
+                      </li>
+                    </ol>
+                    <div className={"widget-49-meeting-action d-flex justify-content-start"}>{
+                      t.isTestTaken ? (
+                          <>
+                            <Link className={"btn btn-sm btn-primary me-2"}
+                                  to={urlBuilder("/review", {
+                                    testId: t.id,
+                                    userId: auth.user.id
+                                  })}>Резултати</Link>
+                          </>
                       ) : (
-                          <p>Предали: <strong>{t.examiners}</strong></p>
-                      )}
-                    </li>
-                  </ul>
-                  <div className={"d-flex justify-content-end"}>(
-                    t.isTestTaken ? (
-                    <>
-                      <Link className={"btn btn-sm btn-primary me-2"}
-                            to={urlBuilder("/review", {
-                              testId: t.Id,
-                              userId: auth.user.id
-                            })}>Резултати</Link>
-                    </>
-                    ) : (
-                    <a onClick={"warn(t.Id, t.Time, t.Title)"}
-                       className={"btn btn-sm btn-secondary"}>Направи</a>
-                    )
-                    )
+                          <a className={"btn btn-sm btn-primary"}>Направи</a>
+                      )
+                    }
+                      {
+                        t.IsCreator
+                      }
+                    </div>
                   </div>
                 </div>
               </div>
