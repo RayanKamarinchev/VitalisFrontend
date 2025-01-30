@@ -26,9 +26,11 @@ export async function submitForm(url, input, setErrors, token) {
         })
   } catch (error) {
     let respErrors = error.response.data.errors
+    console.log(respErrors)
     if (!respErrors){
       if (error.response.data.statusCode === 400){
         let generalErrors = error.response.data.map((err) => err.description)
+        console.log(generalErrors)
         if (generalErrors.length === 0){
           generalErrors = ["Something went wrong"]
         }

@@ -1,0 +1,139 @@
+.game-card {
+    background-color: #fff;
+    border-radius: 20px;
+    padding: 30px;
+    width: 100%;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s;
+}
+
+header h1 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.question-container h2 {
+    color: #444;
+    margin-bottom: 20px;
+}
+.question-container textarea{
+    field-sizing: content;
+    color: #444;
+    margin-bottom: 20px;
+    border: none;
+    outline: 0;
+    font-size: 1.6rem;
+    width: 100%;
+    text-align: center;
+}
+
+.answers-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 20px;
+}
+
+.answer {
+    background-color: #e6e9ed;
+    border: none;
+    padding: 15px;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s;
+}
+
+.answer:not(.edit):hover {
+    /*background-color: var(--primary-color);*/
+    transform: scale(1.03);
+}
+.answer.edit{
+    cursor: auto;
+}
+
+.correct {
+    background-color: var(--bs-success)
+}
+
+.incorrect {
+    background-color: var(--bs-danger);
+}
+
+.progress-bar {
+    height: 5px;
+    background-color: #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+#progress {
+    width: 0%;
+    height: 100%;
+    background-color: var(--primary-color);
+    transition: width 0.3s ease-in-out;
+}
+
+.arrow-btn{
+    border: #dee2e6 2px solid;
+    border-radius: .25rem;
+    padding: 8px 16px;
+}
+.arrow-btn:hover{
+    background-color: #e9ecef;
+    border: #dee2e6 2px solid;
+}
+.arrow-btn:active{
+    background-color: #d1d5d8 !important;
+    border: #dee2e6 2px solid !important;
+}
+
+.arrow-btn > svg{
+    font-size: 2rem;
+}
+
+.answers-container .checkbox{
+    margin-right: .5rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-top: 0;
+}
+
+.open-answers-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.answer-edit {
+    border: #9a9a9a solid 1px;
+    /*border: none;*/
+    padding: 15px;
+    border-radius: 5px;
+    font-size: 1.1rem;
+    width: 100%;
+    resize: vertical;
+}
+
+.score-edit {
+    background-color: #e6e9ed;
+    border: none;
+    padding: 15px;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    width: 200px;
+}
+
+.answer-edit::placeholder,
+.score-edit::placeholder {
+    color: #666;
+}
+
+/* Existing answer styling for consistency */
+.answer.edit {
+    background-color: #e6e9ed;
+    transition: none;
+}

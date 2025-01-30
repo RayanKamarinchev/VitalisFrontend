@@ -1,6 +1,6 @@
 import React from 'react';
 
-function FormTextarea({name, handleInput, errors, placeholder = "Описание..."}) {
+function FormTextarea({name, handleInput, errors, placeholder = "Описание...", value}) {
     return (
         <div className="form-group">
             <label htmlFor={name}>{name}</label>
@@ -11,6 +11,7 @@ function FormTextarea({name, handleInput, errors, placeholder = "Описани�
                 className="form-control"
                 placeholder={placeholder}
                 onChange={handleInput}
+                value={value}
             />
             {errors[name] && <span className="small text-danger">{errors[name]}</span>}
         </div>

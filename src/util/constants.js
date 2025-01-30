@@ -3,6 +3,21 @@ export const groups = ["Alkanes", "Alkenes", "Alkynes", "Arenes", "Alcohols", "E
 export const grades = ["7", "8", "9", "10", "11", "12"]
 export const formChoiceIdentifier = "&";
 export const sortingOptions = ["Test takers", "Avg. score", "questions"]
+export const closedQuestion = {
+  text: "",
+  options: ["", "", "", ""],
+  isOpen: false,
+  answerIndexes: [false, false, false, false],
+  imagePath: "",
+  maxScore: 1
+};
+export const openQuestion = {
+  text: "",
+  answer: "",
+  maxScore: 1,
+  isOpen: true,
+  imagePath: ""
+};
 
 //validation
 export const minTestTitleLength = 5;

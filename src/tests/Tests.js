@@ -1,13 +1,15 @@
 import React from 'react';
 import {Route, Routes} from "react-router-dom";
-import Create from "./tests/Create";
-import TestHomePage from "./tests/TestHomePage";
+import Create from "./Create";
+import TestHomePage from "./TestHomePage";
+import Edit from "./Edit";
 
-function Tests(props) {
+function Tests() {
   return (
       <Routes>
         <Route path="/" element={<TestHomePage/>} />
         <Route path="create" element={<Create/>} />
+        <Route path="edit/:id" element={<Edit/>}/>
       </Routes>
   );
 }

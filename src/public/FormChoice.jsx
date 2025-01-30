@@ -1,7 +1,7 @@
 import React from 'react';
 import {formChoiceIdentifier} from "../util/constants";
 
-function FormChoice({name, text, options, handleInput}) {
+function FormChoice({name, text, options, handleInput, value}) {
   return (
       <div className="list-group">
         <p className='align-self-start'>{text}</p>
@@ -15,6 +15,7 @@ function FormChoice({name, text, options, handleInput}) {
                     name={checkboxName}
                     onChange={handleInput}
                     id={checkboxName}
+                    checked={value[index]}
                 />
                 {item}
               </label>

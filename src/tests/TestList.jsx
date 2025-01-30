@@ -5,8 +5,6 @@ import {urlBuilder} from "../util/utils";
 
 function TestList({tests}) {
   const auth = useAuth();
-  console.log(tests[0])
-  console.log(auth.user)
   return (
       <>
         {
@@ -24,16 +22,12 @@ function TestList({tests}) {
                         <span className={"widget-49-date-day"}>{`${t.averageScore.toFixed(2)}`}</span>
                       </div>
                       <div className={"widget-49-meeting-info"}>
-                        <small className={"widget-49-meeting-time"}>{t.createdOn}</small>
+                        <h6 className={"widget-49-pro-title"}>Органични групи: {t.groups}</h6>
                       </div>
                     </div>
                     <ol className={"widget-49-meeting-points text-start"}>
-                      <h6 className={"widget-49-pro-title"}>{t.groups}</h6>
                       <li className={"widget-49-meeting-item"}>
                         <span>Въпроси: <strong>{(t.questionsCount)}</strong></span>
-                      </li>
-                      <li className={"widget-49-meeting-item"}>
-                        <span>Време: <strong>{t.time} мин</strong></span>
                       </li>
                       <li className={"widget-49-meeting-item"}>
                         {t.isCreator ? (
@@ -41,29 +35,30 @@ function TestList({tests}) {
                                   to={urlBuilder("/examiners", {
                                     testId: t.id
                                   })}>
-                              Предали: <strong>{t.examiners}</strong>
+                              Предали: <strong>{t.testTakers}</strong>
                             </Link>
                         ) : (
-                            <p>Предали: <strong>{t.examiners}</strong></p>
+                            <p>Предали: <strong>{t.testTakers}</strong></p>
                         )}
                       </li>
                     </ol>
                     <div className={"widget-49-meeting-action d-flex justify-content-start"}>{
                       t.isTestTaken ? (
-                          <>
-                            <Link className={"btn btn-sm btn-primary me-2"}
-                                  to={urlBuilder("/review", {
-                                    testId: t.id,
-                                    userId: auth.user.id
-                                  })}>Резултати</Link>
-                          </>
+                          <Link className={"btn btn-sm btn-primary me-2"}
+                                to={urlBuilder("/review", {
+                                  testId: t.id,
+                                  userId: auth.user.id
+                                })}>Result</Link>
                       ) : (
-                          <a className={"btn btn-sm btn-primary"}>Направи</a>
+                          <a className={"btn btn-sm btn-primary"}>Take test</a>
                       )
                     }
                       {
-                        t.IsCreator
+                          t.isCreator &&
+                          <Link className={"btn btn-sm btn-primary ms-3"}
+                                to={'edit/' + t.id}>Edit</Link>
                       }
+                      <small className={"widget-49-meeting-item ml-auto"}>{t.createdOn}</small>
                     </div>
                   </div>
                 </div>

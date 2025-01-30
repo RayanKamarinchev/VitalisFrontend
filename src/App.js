@@ -1,13 +1,16 @@
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import Home from './home/Home'
 import './App.css';
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min";
+import './css/index.sass'
 import Navbar from "./public/Navbar";
 import Footer from "./public/Foorer";
 import AuthProvider from "./user/AuthProvider";
 import PrivateRoute from "./user/PrivateRoute";
 import TestHomePage from "./tests/TestHomePage";
 import Login from "./user/Login";
-import Tests from "./Tests";
+import Tests from "./tests/Tests";
 import Register from "./user/Register";
 
 function App() {
