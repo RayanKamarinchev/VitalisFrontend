@@ -18,7 +18,7 @@ header h1 {
     color: #444;
     margin-bottom: 20px;
 }
-.question-container textarea{
+.question-container textarea, .question-container p{
     field-sizing: content;
     color: #444;
     margin-bottom: 20px;
@@ -47,19 +47,15 @@ header h1 {
 }
 
 .answer:not(.edit):hover {
-    /*background-color: var(--primary-color);*/
     transform: scale(1.03);
 }
 .answer.edit{
     cursor: auto;
 }
 
-.correct {
-    background-color: var(--bs-success)
-}
-
-.incorrect {
-    background-color: var(--bs-danger);
+.selected {
+    transform: scale(1.03);
+    background-color: #34b298
 }
 
 .progress-bar {
@@ -68,13 +64,6 @@ header h1 {
     border-radius: 5px;
     overflow: hidden;
     margin-bottom: 20px;
-}
-
-#progress {
-    width: 0%;
-    height: 100%;
-    background-color: var(--primary-color);
-    transition: width 0.3s ease-in-out;
 }
 
 .arrow-btn{

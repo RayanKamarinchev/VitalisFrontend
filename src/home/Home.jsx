@@ -13,21 +13,20 @@ const Home = () => {
   const [reaction, setReaction] = useState();
   const [product, setProduct] = useState();
   const hasRendered = useRef(false);
-  // const [sketcher, setSketcher] = useState();
   let sketcher;
   
   function loadSketcher() {
-    setTimeout(function () {
+    let checkInterval = setInterval(function () {
       let iframe = document.getElementById("iframe");
-      sketcher = iframe.contentWindow.marvin.sketcherInstance;
+      if (iframe.contentWindow && iframe.contentWindow.marvin) {
+        sketcher = iframe.contentWindow.marvin.sketcherInstance;
+        clearInterval(checkInterval); // Stop checking once it's set
+      }
     }, 200);
   }
   
   useEffect(() => {
     if (document.readyState === 'complete') {
-      console.log("here")
-      console.log(document.getElementById("iframe").readyState)
-      console.log(document.getElementById("iframe"))
       loadSketcher();
     } else {
       document.onreadystatechange = function () {

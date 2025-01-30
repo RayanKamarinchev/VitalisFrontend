@@ -9,7 +9,6 @@ function TestList({tests}) {
       <>
         {
           tests.map(t => (
-              //converted to jsx
               <div className={"card card-margin"}>
                 <div className={"card-header no-border"}>
                   <h5 className={"card-title"}>{t.title} - {t.grade} клас</h5>
@@ -42,21 +41,23 @@ function TestList({tests}) {
                         )}
                       </li>
                     </ol>
-                    <div className={"widget-49-meeting-action d-flex justify-content-start"}>{
-                      t.isTestTaken ? (
-                          <Link className={"btn btn-sm btn-primary me-2"}
-                                to={urlBuilder("/review", {
-                                  testId: t.id,
-                                  userId: auth.user.id
-                                })}>Result</Link>
-                      ) : (
-                          <a className={"btn btn-sm btn-primary"}>Take test</a>
-                      )
-                    }
+                    <div className={"widget-49-meeting-action d-flex justify-content-start"}>
                       {
-                          t.isCreator &&
-                          <Link className={"btn btn-sm btn-primary ms-3"}
-                                to={'edit/' + t.id}>Edit</Link>
+                        t.isCreator ?
+                            <Link className={"btn btn-sm btn-primary ms-3"}
+                                  to={'edit/' + t.id}>Edit</Link>
+                            :
+                            (
+                              t.isTestTaken ? (
+                                  <Link className={"btn btn-sm btn-primary me-2"}
+                                        to={urlBuilder("/review", {
+                                          testId: t.id,
+                                          userId: auth.user.id
+                                        })}>Result</Link>
+                              ) : (
+                                  <Link to={'take/' + t.id} className={"btn btn-sm btn-primary"}>Take test</Link>
+                              )
+                            )
                       }
                       <small className={"widget-49-meeting-item ml-auto"}>{t.createdOn}</small>
                     </div>

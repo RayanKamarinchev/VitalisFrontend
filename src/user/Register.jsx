@@ -33,7 +33,6 @@ const Register = () => {
   const handleSubmitEvent = async (e) => {
     e.preventDefault();
     await submitForm('auth/register', input, setErrors)
-    navigate('/login')
     try {
       await axios.post(process.env.REACT_APP_API_BASE_URL + 'auth/register', input)
       navigate("/login")

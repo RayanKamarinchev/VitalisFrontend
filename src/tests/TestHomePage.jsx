@@ -22,7 +22,12 @@ function TestHomePage() {
         const allParams = Object.fromEntries(searchParams.entries());
         res = await authGet(urlBuilder(process.env.REACT_APP_API_BASE_URL + 'tests', allParams), auth.token)
       }catch (e){
-        res = await authGet(urlBuilder(process.env.REACT_APP_API_BASE_URL + 'tests'), auth.token)
+        try {
+          res = await authGet(urlBuilder(process.env.REACT_APP_API_BASE_URL + 'tests'), auth.token)
+        }catch (e) {
+          console.log(e)
+          return;
+        }
       }
       setModel(res.data)
       paginationStart = Math.max(1, res.data.currentPage - 3);
