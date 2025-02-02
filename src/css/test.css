@@ -53,9 +53,20 @@ header h1 {
     cursor: auto;
 }
 
-.selected {
+.selected:not(.edit) {
     transform: scale(1.03);
-    background-color: #34b298
+}
+
+.correct{
+    background-color: #3ad05c !important;
+}
+
+.selected {
+    background-color: #34b298;
+}
+
+.selected:not(.correct).edit{
+    background-color: var(--bs-danger) !important;
 }
 
 .progress-bar {

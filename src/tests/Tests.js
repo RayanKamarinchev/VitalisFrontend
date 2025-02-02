@@ -4,6 +4,7 @@ import Create from "./Create";
 import TestHomePage from "./TestHomePage";
 import Edit from "./Edit";
 import Take from "./Take";
+import Review from "./Review";
 
 function Tests() {
   return (
@@ -12,6 +13,7 @@ function Tests() {
         <Route path="create" element={<Create/>} />
         <Route path="edit/:id" element={<Edit/>}/>
         <Route path="take/:id" element={<Take/>}/>
+        <Route path="review/:testId/:userId" element={<Review/>}/>
       </Routes>
   );
 }

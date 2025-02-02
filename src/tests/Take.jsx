@@ -5,7 +5,6 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faAngleLeft, faAngleRight} from '@fortawesome/free-solid-svg-icons';
 import {authGet, submitForm} from "../util/utils";
 import {useAuth} from "../user/AuthProvider";
-import {closedQuestion, formChoiceIdentifier, grades, groups, openQuestion} from "../util/constants";
 
 function Edit() {
   const {id} = useParams();

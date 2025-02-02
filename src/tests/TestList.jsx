@@ -4,6 +4,7 @@ import {Link} from "react-router-dom";
 import {urlBuilder} from "../util/utils";
 
 function TestList({tests}) {
+  console.log(tests[0])
   const auth = useAuth();
   return (
       <>
@@ -11,22 +12,21 @@ function TestList({tests}) {
           tests.map(t => (
               <div className={"card card-margin"}>
                 <div className={"card-header no-border"}>
-                  <h5 className={"card-title"}>{t.title} - {t.grade} клас</h5>
+                  <h5 className={"card-title"}>{t.title} - {t.grade} grade</h5>
                 </div>
                 <div className={"card-body pt-0"}>
                   <div className={"widget-49"}>
                     <div className={"widget-49-title-wrapper"}>
-                      <div className={"widget-49-date-primary"}
-                           style={{width: "4rem", height: "4rem"}}>
+                      <div className={"widget-49-date-primary"}>
                         <span className={"widget-49-date-day"}>{`${t.averageScore.toFixed(2)}`}</span>
                       </div>
                       <div className={"widget-49-meeting-info"}>
-                        <h6 className={"widget-49-pro-title"}>Органични групи: {t.groups}</h6>
+                        <h6 className={"widget-49-pro-title"}>Organic groups:<br></br> {t.groups.join(", ")}</h6>
                       </div>
                     </div>
                     <ol className={"widget-49-meeting-points text-start"}>
                       <li className={"widget-49-meeting-item"}>
-                        <span>Въпроси: <strong>{(t.questionsCount)}</strong></span>
+                        <span>Questions: <strong>{(t.questionsCount)}</strong></span>
                       </li>
                       <li className={"widget-49-meeting-item"}>
                         {t.isCreator ? (
@@ -34,10 +34,10 @@ function TestList({tests}) {
                                   to={urlBuilder("/examiners", {
                                     testId: t.id
                                   })}>
-                              Предали: <strong>{t.testTakers}</strong>
+                              Examinees: <strong>{t.testTakers}</strong>
                             </Link>
                         ) : (
-                            <p>Предали: <strong>{t.testTakers}</strong></p>
+                            <p>Examinees: <strong>{t.testTakers}</strong></p>
                         )}
                       </li>
                     </ol>
@@ -50,10 +50,7 @@ function TestList({tests}) {
                             (
                               t.isTestTaken ? (
                                   <Link className={"btn btn-sm btn-primary me-2"}
-                                        to={urlBuilder("/review", {
-                                          testId: t.id,
-                                          userId: auth.user.id
-                                        })}>Result</Link>
+                                        to={"review/" + t.id + '/' + auth.user.id}>Result</Link>
                               ) : (
                                   <Link to={'take/' + t.id} className={"btn btn-sm btn-primary"}>Take test</Link>
                               )

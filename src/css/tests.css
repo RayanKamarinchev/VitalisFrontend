@@ -383,3 +383,11 @@
 .widget-49 .widget-49-meeting-action a {
     text-transform: uppercase;
 }
+
+.widget-49-date-primary{
+    aspect-ratio: 1 / 1;
+}
+
+.widget-49-meeting-info{
+    text-align: start;
+}
