@@ -15,6 +15,10 @@
   }
 }
 
+.content{
+  min-height: calc(100vh - 3rem - 50px - 35px)
+}
+
 a{
   text-decoration: none;
 }
@@ -70,7 +74,6 @@ footer{
 }
 
 #isomers-container {
-  border: black 1px solid;
   overflow: auto; /* Enables scrolling */
   scrollbar-width: none; /* Firefox */
 }

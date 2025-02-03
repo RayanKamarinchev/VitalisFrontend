@@ -13,8 +13,6 @@ import Login from "./user/Login";
 import Tests from "./tests/Tests";
 import Register from "./user/Register";
 import MoleculeInfo from "./mol/MoleculeInfo";
-import MoleculeExp from "./mol/MoleculeExperiment";
-import MoleculeExp2 from "./mol/MoleculeExperiment2";
 
 function App() {
   return (
@@ -25,7 +23,7 @@ function App() {
             <div className="content">
               <Routes>
                 <Route exact path="/" element={<Home/>}/>
-                <Route exact path="/mol" element={<MoleculeExp2/>}/>
+                <Route exact path="/mol" element={<MoleculeInfo/>}/>
                 <Route path="/tests/*" element={<PrivateRoute><Tests/></PrivateRoute>}/>
                 {/*<Route exact path="/books" element={<AllBooks/>}/>*/}
                 <Route exact path="/login" element={<Login/>}/>
