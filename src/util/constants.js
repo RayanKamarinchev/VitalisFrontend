@@ -19,6 +19,8 @@ export const openQuestion = {
   imagePath: ""
 };
 
+export const pubChemUrl = 'https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/smiles/'
+
 //validation
 export const minTestTitleLength = 5;
 export const maxTestTitleLength = 30;

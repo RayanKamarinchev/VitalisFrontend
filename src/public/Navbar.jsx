@@ -18,7 +18,7 @@ const Navbar = () => {
             
             <ul className="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0 fs-5">
               <li><NavLink to="/" className="nav-link px-2">Reaction predictor</NavLink></li>
-              <li><NavLink to="/" className="nav-link px-2">Molecule info</NavLink></li>
+              <li><NavLink to="/mol" className="nav-link px-2">Molecule info</NavLink></li>
               {
                 isUserLogged && <li><NavLink to="/tests" className="nav-link px-2">Tests</NavLink></li>
               }

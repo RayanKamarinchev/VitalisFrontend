@@ -43,9 +43,11 @@ code {
 }
 
 hr{
-  border-top: 2px solid ;
-  margin: 0;
+  border-top: 2px solid !important;
+  margin: 0 !important;
+  width: 100%;
 }
+
 
 .form-group{
   align-items: start;
@@ -62,4 +64,7 @@ hr{
 
 a{
   text-decoration: none;
+}
+
+footer{
 }
