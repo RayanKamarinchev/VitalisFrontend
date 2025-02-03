@@ -19,7 +19,9 @@ export const openQuestion = {
   imagePath: ""
 };
 
-export const pubChemUrl = 'https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/smiles/'
+export const pubChemUrl = 'https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/'
+export const pubChemPropertiesUrl = (smiles) => pubChemUrl +"smiles/" + smiles + "/property/MolecularFormula,MolecularWeight,IUPACName,Title/JSON"
+export const pubChemIsomersUrl = (molFormula) => pubChemUrl + 'fastformula/' + molFormula + '/property/MolecularWeight,IUPACName,Title,SMILES/JSON'
 
 //validation
 export const minTestTitleLength = 5;

@@ -68,3 +68,13 @@ a{
 
 footer{
 }
+
+#isomers-container {
+  border: black 1px solid;
+  overflow: auto; /* Enables scrolling */
+  scrollbar-width: none; /* Firefox */
+}
+
+#isomers-container::-webkit-scrollbar {
+  display: none; /* Hides scrollbar in Chrome, Edge, and Safari */
+}

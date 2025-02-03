@@ -1,18 +1,20 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import axios from "axios";
-import {pubChemIsomersUrl, pubChemPropertiesUrl, pubChemUrl} from "../util/constants";
+import { pubChemIsomersUrl, pubChemPropertiesUrl } from "../util/constants";
 import Compound from "../home/Compound";
 
-function MoleculeInfo(props) {
+function MoleculeExp(props) {
   const [sketcher, setSketcher] = useState();
-  const [error, setError] = useState("")
-  const [compound, setCompound] = useState()
-  const [isomers, setIsomers] = useState()
+  const [error, setError] = useState("");
+  const [compound, setCompound] = useState();
+  const [allIsomers, setAllIsomers] = useState([]);
+  const [visibleIsomers, setVisibleIsomers] = useState(20);
   const [cid, setCid] = useState('2244');
   const [viewer, setViewer] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const viewerRef = useRef(null);
+  const isomersContainerRef = useRef(null);
   
   const initializeViewer = () => {
     if (window.$3Dmol && viewerRef.current) {
@@ -80,20 +82,35 @@ function MoleculeInfo(props) {
     });
     const inputCompound = res.data.result.substring(0, res.data.result.indexOf('\t'));
     if (inputCompound.includes('.')) {
-      setError("Please draw a single molecule")
+      setError("Please draw a single molecule");
     } else {
-      setError("")
+      setError("");
       const res = await axios.get(pubChemPropertiesUrl(inputCompound));
       const outputCompound = res.data.PropertyTable.Properties[0];
-      setCompound(outputCompound)
-      const isomersRes = await axios.get(pubChemIsomersUrl(outputCompound.MolecularFormula))
+      setCompound(outputCompound);
+      const isomersRes = await axios.get(pubChemIsomersUrl(outputCompound.MolecularFormula));
       let outputIsomers = isomersRes.data.PropertyTable.Properties
-          .filter(x => x.MolecularWeight === outputCompound.MolecularWeight && !x.SMILES.includes('.') && x.CID !== outputCompound.CID).slice(0, 20)
-      console.log(outputIsomers)
-      setIsomers(outputIsomers)
+          .filter(x => x.MolecularWeight === outputCompound.MolecularWeight && !x.SMILES.includes('.') && x.CID !== outputCompound.CID);
+      setAllIsomers(outputIsomers);
+      setVisibleIsomers(10);
     }
-    
   }
+  
+  useEffect(() => {
+    const container = isomersContainerRef.current;
+    if (!container || allIsomers.length === 0) return;
+    
+    const handleScroll = () => {
+      const { scrollTop, scrollHeight, clientHeight } = container;
+      const isNearBottom = scrollHeight - (scrollTop + clientHeight) < 100;
+      if (isNearBottom) {
+        setVisibleIsomers(prev => Math.min(prev + 10, allIsomers.length));
+      }
+    };
+    
+    container.addEventListener('scroll', handleScroll);
+    return () => container.removeEventListener('scroll', handleScroll);
+  }, [allIsomers]);
   
   useEffect(() => {
     if (document.readyState === 'complete') {
@@ -143,32 +160,37 @@ function MoleculeInfo(props) {
               </div>
               <hr/>
               <h3 className='align-self-center mb-4'>Isomers</h3>
-              {isomers && isomers.map((iso, i) => (
-                  <>
-                    <div className='d-flex flex-row align-items-center w-100 mb-2'>
-                      <div className='d-flex flex-column align-items-start col-4'>
-                        <p><strong>IUPAC Name:</strong> {iso.IUPACName}</p>
-                        <p><strong>2d structure:</strong></p>
-                        <Compound smiles={iso.SMILES}/>
+              <div
+                  ref={isomersContainerRef}
+                  style={{maxHeight: '600px', overflowY: 'auto', width: '100%'}}
+              >
+                {allIsomers.slice(0, visibleIsomers).map((iso, i) => (
+                    <React.Fragment key={iso.CID}>
+                      <div className='d-flex flex-row align-items-center w-100 mb-2'>
+                        <div className='d-flex flex-column align-items-start col-4'>
+                          <p><strong>IUPAC Name:</strong> {iso.IUPACName}</p>
+                          <p><strong>2d structure:</strong></p>
+                          <Compound smiles={iso.SMILES}/>
+                        </div>
+                        <div className='col-8 text-start'>
+                          <p><strong>3d structure</strong></p>
+                          <iframe
+                              className='w-100'
+                              style={{ height: 300 }}
+                              frameBorder="0"
+                              src={`https://embed.molview.org/v1/?mode=balls&cid=${iso.CID}&bg=white`}
+                          ></iframe>
+                        </div>
                       </div>
-                      <div className='col-8 text-start'>
-                        <p>
-                          <stron>3d structure</stron>
-                        </p>
-                        <iframe className='w-100' id='coolFrame' style={{height: 300}} frameBorder="0"
-                                src={`https://embed.molview.org/v1/?mode=balls&cid=${iso.CID}&bg=white`}></iframe>
-                      </div>
-                    </div>
-                    {i !== isomers.length - 1 && <hr className='mb-3'/>}
-                  </>
-              ))}
-            </>
-            }
+                      {i !== visibleIsomers - 1 && <hr className='mb-3'/>}
+                    </React.Fragment>
+                ))}
+              </div>
+            </>}
           </div>
         </div>
-      
       </div>
   );
 }
 
-export default MoleculeInfo;
+export default MoleculeExp;

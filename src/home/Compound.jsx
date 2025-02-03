@@ -3,7 +3,10 @@ import React, {useEffect} from 'react';
 function Compound({ smiles }) {
   useEffect(() => {
     window.SmiDrawer.apply();
-    document.querySelector(".final-reaction").setAttribute("viewBox", "0 0 120 40");
+    let finalReaction =  document.querySelector(".final-reaction");
+    if(finalReaction) {
+      finalReaction.setAttribute("viewBox", "0 0 120 40");
+    }
   }, [smiles]);
   return (
       <svg id="compound"
