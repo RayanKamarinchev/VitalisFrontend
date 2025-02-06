@@ -5,7 +5,7 @@ import ReactionList from "./ReactionList";
 import ChosenReaction from "./ChosenReaction";
 import Compound from "./Compound";
 
-const Home = () => {
+const HomeExp = () => {
   let lastCompound = "<cml><MDocument></MDocument></cml>";
   let changeInProgress = false;
   const [reactions, setReactions] = useState([]);
@@ -13,17 +13,30 @@ const Home = () => {
   const [reaction, setReaction] = useState();
   const [product, setProduct] = useState();
   const hasRendered = useRef(false);
-  let sketcher;
+  const [sketcher, setSketcher] = useState(null);
+  const [outputSketcher, setOutputSketcher] = useState(null)
   
   function loadSketcher() {
     let checkInterval = setInterval(function () {
-      let iframe = document.getElementById("iframe");
+      let iframe = document.querySelectorAll("iframe")[0];
       if (iframe.contentWindow && iframe.contentWindow.marvin) {
-        sketcher = iframe.contentWindow.marvin.sketcherInstance;
-        clearInterval(checkInterval); // Stop checking once it's set
+        setSketcher(iframe.contentWindow.marvin.sketcherInstance);
+        clearInterval(checkInterval);
+      }
+    }, 200);
+    
+    let newInterval = setInterval(function () {
+      let iframe = document.querySelectorAll("iframe")[1];
+      if (iframe.contentWindow && iframe.contentWindow.marvin) {
+        setOutputSketcher(iframe.contentWindow.marvin.sketcherInstance);
+        console.log(iframe.contentWindow.marvin.sketcherInstance)
+        clearInterval(newInterval);
       }
     }, 200);
   }
+  useEffect(() => {
+    console.log("Output Sketcher Updated:", outputSketcher);
+  }, [outputSketcher]);
   
   useEffect(() => {
     if (document.readyState === 'complete') {
@@ -39,7 +52,7 @@ const Home = () => {
     const intervalId = setInterval(checkForReactions, 100);
     
     return () => clearInterval(intervalId);
-  }, []);
+  }, [outputSketcher]);
   
   useEffect(() => {
     if (hasRendered.current) {
@@ -57,10 +70,10 @@ const Home = () => {
   }, [reaction]);
   
   const checkForReactions = async () => {
-    if (!sketcher) {
+    if (!sketcher || !outputSketcher) {
       return;
     }
-    let drawnCompound = await sketcher.exportStructure("mrv");
+    let drawnCompound = await sketcher.exportStructure("mol");
     if (lastCompound === drawnCompound && changeInProgress) {
       changeInProgress = false;
       await getReactions(drawnCompound);
@@ -80,14 +93,20 @@ const Home = () => {
         inputFormat: "mrv -- Chemical Markup Language",
         outputFormat: "can -- Canonical SMILES format"
       });
+      // console.log(outputSketcher)
+      var imgData = marvin.ImageExporter.molToDataUrl(value,"image/png",{});
+      // create a new cell with the new image and append to the table
+      if(imgData != null) {
+        var molCell = $('<div>', { class: "mol-cell"});
+        $("#imageContainer").append(molCell);
+        molCell.append($('<span>', { text: (index+1) }));
+        var img = $('<img>');
+        img.attr('src', imgData);
+        img.attr('data-mol', escape(value));
+        molCell.append(img);
+      }
+      outputSketcher.importStructure("mol", inputCompound)
       
-      const compound = res.data.result.substring(0, res.data.result.indexOf('\t'));
-      console.log(compound)
-      const reactionsResponse = await axios.get(
-          `${process.env.REACT_APP_API_BASE_URL}mol/getReactions?reactant=${compound}`
-      );
-      setReactions(reactionsResponse.data);
-      setReactant(compound);
     } catch (err) {
       console.error(err);
     }
@@ -111,6 +130,7 @@ const Home = () => {
   
   return (
       <div>
+        <p>fake</p>
         <div className="container text-center">
           <div className="row align-items-start" style={{height: "450px"}}>
             <iframe
@@ -138,11 +158,23 @@ const Home = () => {
                   />
               )}
             </div>
-            <div className="col-4 align-items-center">{reaction && <Compound smiles={product}/>}</div>
+            <div className="col-4 align-items-center">
+              <iframe
+                  id="iframe2"
+                  src="./marvinjs/editor.html"
+                  style={{
+                    overflow: "hidden",
+                    width: "500px",
+                    height: "450px",
+                    border: "1px solid darkgray",
+                  }}
+                  className="col-5"
+              />
+            </div>
           </div>
         </div>
       </div>
   );
 };
 
-export default Home;
+export default HomeExp;

@@ -1,5 +1,5 @@
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
-import Home from './home/Home'
+import HomeExp from './home/HomeExp'
 import './App.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
@@ -22,7 +22,7 @@ function App() {
             <Navbar/>
             <div className="content">
               <Routes>
-                <Route exact path="/" element={<Home/>}/>
+                <Route exact path="/" element={<HomeExp/>}/>
                 <Route exact path="/mol" element={<MoleculeInfo/>}/>
                 <Route path="/tests/*" element={<PrivateRoute><Tests/></PrivateRoute>}/>
                 {/*<Route exact path="/books" element={<AllBooks/>}/>*/}
