@@ -76,6 +76,14 @@ function Edit() {
     setCurrentQuestionIndex(questions.length);
   };
   
+  const deleteQuestion = () => {
+    setQuestions((prev) => {
+      prev.splice(currentQuestionIndex, 1)
+      return prev
+    })
+    setCurrentQuestionIndex((prev) => prev-1)
+  }
+  
   async function getData() {
     try {
       const resp = await authGet(
@@ -155,9 +163,9 @@ function Edit() {
                 <button type="button"
                     className="btn arrow-btn"
                     onClick={() =>
-                        setCurrentQuestionIndex((prev) => (prev > 0 ? prev - 1 : prev))
+                        setCurrentQuestionIndex((prev) => (prev > -1 ? prev - 1 : prev))
                     }
-                    disabled={currentQuestionIndex === 0}
+                    disabled={currentQuestionIndex === -1}
                 >
                   <FontAwesomeIcon icon={faAngleLeft}/>
                 </button>
@@ -234,10 +242,11 @@ function Edit() {
               )}
               
               <div className="d-flex justify-content-end mt-3">
+                <button type='button' onClick={deleteQuestion} className="btn btn-danger delete-btn">Delete</button>
                 <div>
                   <p className='text-danger'>{errors}</p>
                 </div>
-                <div className="dropdown col-2 justify-content-end d-flex">
+                <div className="dropdown ms-3 justify-content-end d-flex">
                   <button
                       className="btn border dropdown-toggle"
                       type="button"

@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Link, useSearchParams} from "react-router-dom";
 import TestList from "./TestList";
 import {authGet, urlBuilder} from "../util/utils";
-import '../css/tests.css'
+import '../css/testsHome.css'
 import {useAuth} from "../user/AuthProvider";
 import Filters from "./Filters";
 

@@ -8,7 +8,7 @@ function FormChoice({name, text, options, handleInput, value}) {
         {options.map((item, index) => {
           let checkboxName = formChoiceIdentifier + name + formChoiceIdentifier + index;
           return (
-              <label className="list-group-item align-items-start text-start" htmlFor={checkboxName}>
+              <label key={index} className="list-group-item align-items-start text-start" htmlFor={checkboxName}>
                 <input
                     type="checkbox"
                     className="form-check-input me-1"

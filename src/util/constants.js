@@ -19,7 +19,6 @@ export const openQuestion = {
   imagePath: ""
 };
 export const compoundKey = "compoundMolFile"
-export const cidsKey = "cidsKey"
 export const structureKey = "structureKey"
 
 export const emptyMol = "\n" +

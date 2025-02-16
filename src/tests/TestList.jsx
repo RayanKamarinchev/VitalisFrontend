@@ -15,20 +15,20 @@ function TestList({tests}) {
                   <h5 className={"card-title"}>{t.title} - {t.grade} grade</h5>
                 </div>
                 <div className={"card-body pt-0"}>
-                  <div className={"widget-49"}>
-                    <div className={"widget-49-title-wrapper"}>
-                      <div className={"widget-49-date-primary"}>
-                        <span className={"widget-49-date-day"}>{`${t.averageScore.toFixed(2)}`}</span>
+                  <div className={"test"}>
+                    <div className={"test-up-container"}>
+                      <div className={"avgscore-wrapper"}>
+                        <span className={"test-avgscore"}>{`${t.averageScore.toFixed(2)}`}</span>
                       </div>
-                      <div className={"widget-49-meeting-info"}>
-                        <h6 className={"widget-49-pro-title"}>Organic groups:<br></br> {t.groups.join(", ")}</h6>
+                      <div className={"groups-wrapper"}>
+                        <h6 className={"groups"}>Organic groups:<br></br> {t.groups.join(", ")}</h6>
                       </div>
                     </div>
-                    <ol className={"widget-49-meeting-points text-start"}>
-                      <li className={"widget-49-meeting-item"}>
+                    <ol className={"test-info-wrapper text-start"}>
+                      <li className={"test-info"}>
                         <span>Questions: <strong>{(t.questionsCount)}</strong></span>
                       </li>
-                      <li className={"widget-49-meeting-item"}>
+                      <li className={"test-info"}>
                         {t.isCreator ? (
                             <Link className={"text-decoration-underline"}
                                   to={urlBuilder("/examiners", {
@@ -41,7 +41,7 @@ function TestList({tests}) {
                         )}
                       </li>
                     </ol>
-                    <div className={"widget-49-meeting-action d-flex justify-content-start"}>
+                    <div className={"test-btns d-flex justify-content-start"}>
                       {
                         t.isCreator ?
                             <Link className={"btn btn-sm btn-primary ms-3"}
@@ -56,7 +56,7 @@ function TestList({tests}) {
                               )
                             )
                       }
-                      <small className={"widget-49-meeting-item ml-auto"}>{t.createdOn}</small>
+                      <small className={"test-info ml-auto"}>{t.createdOn}</small>
                     </div>
                   </div>
                 </div>

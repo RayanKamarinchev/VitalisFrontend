@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import axios from "axios";
-import {cidsKey, compoundKey, pubChemIsomersUrl, pubChemPropertiesUrl, structureKey} from "../util/constants";
+import {compoundKey, pubChemIsomersUrl, pubChemPropertiesUrl, structureKey} from "../util/constants";
 import Compound from "../home/Compound";
 import Lazy3DViewer from "./Lazy3DViewer";
 
@@ -64,13 +64,6 @@ function MoleculeInfo() {
   //   viewer.render();
   // };
   
-  const resetView = () => {
-    if (viewer) {
-      viewer.zoomTo();
-      viewer.render();
-    }
-  };
-  
   function loadSketcher() {
     let checkInterval = setInterval(function () {
       let iframe = document.getElementById("iframe");
@@ -78,7 +71,7 @@ function MoleculeInfo() {
         let localSketcherInstance = iframe.contentWindow.marvin.sketcherInstance
         setSketcher(localSketcherInstance);
         clearInterval(checkInterval);
-        if (localStorage[cidsKey]){
+        if (localStorage[compoundKey]){
           loadCompound(localSketcherInstance)
         }
       }
@@ -165,12 +158,13 @@ function MoleculeInfo() {
     try {
       let compoundJson = JSON.parse(localStorage[compoundKey])
       setCompoundInfo(compoundJson)
-      console.log(compoundJson)
       localSketcherInstance.importStructure("mol", localStorage[structureKey]);
       search(compoundJson)
     } catch (e) {
       console.log(e)
     }
+    localStorage.removeItem(compoundKey)
+    localStorage.removeItem(structureKey)
   }
   
   useEffect(() => {

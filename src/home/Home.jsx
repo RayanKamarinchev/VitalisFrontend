@@ -3,24 +3,27 @@ import axios from "axios";
 import '../css/home.css';
 import ReactionList from "./ReactionList";
 import ChosenReaction from "./ChosenReaction";
-import Compound from "./Compound";
+import {compoundKey, emptyMol, pubChemPropertiesUrl, structureKey} from "../util/constants";
+import {Link} from "react-router-dom";
 
-const Home = () => {
-  let lastCompound = "<cml><MDocument></MDocument></cml>";
+const HomeExp = () => {
+  let lastCompound = emptyMol;
   let changeInProgress = false;
   const [reactions, setReactions] = useState([]);
   const [reactant, setReactant] = useState([]);
+  const [reactantSmiles, setReactantSmiles] = useState([]);
   const [reaction, setReaction] = useState();
-  const [product, setProduct] = useState();
   const hasRendered = useRef(false);
-  let sketcher;
+  const [marvin, setMarvin] = useState(null);
+  const [img, setImg] = useState(null);
+  const [name, setName] = useState()
   
   function loadSketcher() {
     let checkInterval = setInterval(function () {
-      let iframe = document.getElementById("iframe");
+      let iframe = document.querySelectorAll("iframe")[0];
       if (iframe.contentWindow && iframe.contentWindow.marvin) {
-        sketcher = iframe.contentWindow.marvin.sketcherInstance;
-        clearInterval(checkInterval); // Stop checking once it's set
+        setMarvin(iframe.contentWindow.marvin);
+        clearInterval(checkInterval);
       }
     }, 200);
   }
@@ -39,7 +42,7 @@ const Home = () => {
     const intervalId = setInterval(checkForReactions, 100);
     
     return () => clearInterval(intervalId);
-  }, []);
+  }, [marvin]);
   
   useEffect(() => {
     if (hasRendered.current) {
@@ -57,10 +60,10 @@ const Home = () => {
   }, [reaction]);
   
   const checkForReactions = async () => {
-    if (!sketcher) {
+    if (!marvin) {
       return;
     }
-    let drawnCompound = await sketcher.exportStructure("mrv");
+    let drawnCompound = await marvin.sketcherInstance.exportStructure("mol");
     if (lastCompound === drawnCompound && changeInProgress) {
       changeInProgress = false;
       await getReactions(drawnCompound);
@@ -74,20 +77,15 @@ const Home = () => {
   
   async function getReactions(inputCompound) {
     try {
-      console.log(inputCompound)
-      const res = await axios.post("https://openbabel.cheminfo.org/v1/convert", {
-        input: inputCompound,
-        inputFormat: "mrv -- Chemical Markup Language",
-        outputFormat: "can -- Canonical SMILES format"
-      });
+      const smiles = await getSmiles(inputCompound);
       
-      const compound = res.data.result.substring(0, res.data.result.indexOf('\t'));
-      console.log(compound)
       const reactionsResponse = await axios.get(
-          `${process.env.REACT_APP_API_BASE_URL}mol/getReactions?reactant=${compound}`
+          `${process.env.REACT_APP_API_BASE_URL}mol/getReactions?reactant=${smiles}`
       );
+      
       setReactions(reactionsResponse.data);
-      setReactant(compound);
+      setReactant(inputCompound);
+      setReactantSmiles(smiles)
     } catch (err) {
       console.error(err);
     }
@@ -95,36 +93,49 @@ const Home = () => {
   
   const fetchProduct = async (reagent, catalyst, conditions, followUp) => {
     try {
-      let query = `mol/predictProduct?reactant=${reactant}&reagent=${reagent}`;
-      if (catalyst) query += `&catalyst=${catalyst}`;
-      if (conditions) query += `&conditions=${conditions}`;
-      if (followUp) query += `&followUp=${followUp}`;
+      const productResponse = await axios.post(
+          `${process.env.REACT_APP_API_BASE_URL}mol/predictProduct`,
+          {
+            reactant: reactant,
+            smiles: reactantSmiles,
+            reagent: reagent,
+            catalyst: catalyst,
+            conditions: conditions,
+            followUp: followUp
+          }
+      );
+      setImg(marvin.ImageExporter.molToDataUrl(productResponse.data, "image/png",{}));
       
-      const response = await axios.get(process.env.REACT_APP_API_BASE_URL + query);
-      
-      const productData = response.data;
-      setProduct(productData);
+      const smiles = await getSmiles(productResponse.data);
+      const res = await axios.get(pubChemPropertiesUrl(smiles));
+      const outputCompoundInfo = res.data.PropertyTable.Properties[0];
+      console.log(outputCompoundInfo)
+      setName(outputCompoundInfo.IUPACName)
+      localStorage[compoundKey] = JSON.stringify(outputCompoundInfo)
+      localStorage[structureKey] = productResponse.data
     } catch (error) {
       console.error("Error fetching product:", error);
     }
   };
   
+  async function getSmiles(inputCompound){
+    const res = await axios.post("https://openbabel.cheminfo.org/v1/convert", {
+      input: inputCompound,
+      inputFormat: "mol -- MDL MOL format",
+      outputFormat: "can -- Canonical SMILES format"
+    });
+    return res.data.result.substring(0, res.data.result.indexOf('\t'));
+  }
+  
   return (
       <div>
         <div className="container text-center">
-          <div className="row align-items-start" style={{height: "450px"}}>
+          <div className="row mb-4 align-items-center">
             <iframe
                 id="iframe"
                 src="./marvinjs/editor.html"
-                style={{
-                  overflow: "hidden",
-                  width: "500px",
-                  height: "450px",
-                  border: "1px solid darkgray",
-                }}
-                className="col-5"
             />
-            <div className="col-3 reaction-container d-flex align-items-center">
+            <div className="reaction-container d-flex align-items-center">
               {!reaction ? (
                   <ReactionList reactions={reactions} setReaction={setReaction}/>
               ) : (
@@ -134,15 +145,21 @@ const Home = () => {
                       followUp={reaction.followUp}
                       reagentVisualised={reaction.reagentVisualised}
                       setReaction={setReaction}
-                      setProduct={setProduct}
                   />
               )}
             </div>
-            <div className="col-4 align-items-center">{reaction && <Compound smiles={product}/>}</div>
+            <div className="col-3 h-100 align-items-center d-flex flex-column">
+              {img &&
+                  <>
+                    <img src={img} width='80%'/>
+                    <Link to='/mol'>{name}</Link>
+                  </>
+              }
+            </div>
           </div>
         </div>
       </div>
   );
 };
 
-export default Home;
+export default HomeExp;

@@ -6,8 +6,7 @@ function ChosenReaction({
                           conditions = "",
                           followUp = "",
                           reagentVisualised,
-                          setReaction,
-                          setProduct
+                          setReaction
                         }) {
   const reaction = useRef();
   
@@ -27,7 +26,6 @@ function ChosenReaction({
   
   function onReactionClick() {
     setReaction(null);
-    setProduct(null);
   }
   
   return (

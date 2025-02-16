@@ -137,3 +137,7 @@ header h1 {
     background-color: #e6e9ed;
     transition: none;
 }
+
+.delete-btn{
+    margin-right: auto;
+}
