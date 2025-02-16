@@ -18,6 +18,15 @@ export const openQuestion = {
   isOpen: true,
   imagePath: ""
 };
+export const compoundKey = "compoundMolFile"
+export const cidsKey = "cidsKey"
+export const structureKey = "structureKey"
+
+export const emptyMol = "\n" +
+    "  MJ240402                      \n" +
+    "\n" +
+    "  0  0  0  0  0  0  0  0  0  0999 V2000\n" +
+    "M  END\n"
 
 export const pubChemUrl = 'https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/'
 export const pubChemPropertiesUrl = (smiles) => pubChemUrl +"smiles/" + smiles + "/property/MolecularFormula,MolecularWeight,IUPACName,Title/JSON"

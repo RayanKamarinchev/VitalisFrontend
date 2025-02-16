@@ -10,7 +10,7 @@ function ReactionArrow({reagent, catalyst, conditions, followUp = "", reagentVis
   
   return (
       <svg
-          className="w-100 h-25 reaction-svg p-2 btn reaction-btn" data-smiles={smiles}
+          className="w-100 reaction-svg p-2 btn reaction-btn" data-smiles={smiles}
            onClick={() => onReactionClick?.({reagent, catalyst, conditions, followUp, reagentVisualised})}
            data-smiles-reaction-options="{  'arrow': {
         'thickness': 2,

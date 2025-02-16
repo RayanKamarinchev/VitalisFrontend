@@ -1,18 +1,15 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import axios from "axios";
-import {pubChemIsomersUrl, pubChemPropertiesUrl} from "../util/constants";
+import {cidsKey, compoundKey, pubChemIsomersUrl, pubChemPropertiesUrl, structureKey} from "../util/constants";
 import Compound from "../home/Compound";
 import Lazy3DViewer from "./Lazy3DViewer";
 
-function MoleculeInfo(props) {
+function MoleculeInfo() {
   const [sketcher, setSketcher] = useState();
   const [error, setError] = useState("");
-  const [compound, setCompound] = useState();
+  const [compoundInfo, setCompoundInfo] = useState();
   const [allIsomers, setAllIsomers] = useState([]);
-  const [cid, setCid] = useState('2244');
   const [viewer, setViewer] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
   const viewerRef = useRef(null);
   const isomersContainerRef = useRef(null);
   const [visibleIsomers, setVisibleIsomers] = useState(10);
@@ -45,38 +42,27 @@ function MoleculeInfo(props) {
         backgroundColor: 0xffffff
       });
       setViewer(newViewer);
-      loadStructure();
     }
   };
   
-  const loadStructure = async () => {
-    if (!viewer || !cid) return;
-    
-    setIsLoading(true);
-    setErrorMessage('');
-    
-    try {
-      viewerRef.current.innerHTML = '';
-      
-      const response = await fetch(
-          `https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/${cid}/SDF?record_type=3d`
-      );
-      
-      if (!response.ok) throw new Error('Failed to fetch structure');
-      
-      const sdfData = await response.text();
-      console.log(sdfData)
-      viewer.addModel(sdfData, "sdf");
-      viewer.setStyle({}, {stick: {}});
-      viewer.zoomTo();
-      viewer.render();
-    } catch (error) {
-      setErrorMessage(error.message);
-      console.error('Error:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  // const loadStructure = async () => {
+  //   if (!viewer) return;
+  //
+  //   viewerRef.current.innerHTML = '';
+  //
+  //   const response = await fetch(
+  //       `https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/${cid}/SDF?record_type=3d`
+  //   );
+  //
+  //   if (!response.ok) throw new Error('Failed to fetch structure');
+  //
+  //   const sdfData = await response.text();
+  //
+  //   viewer.addModel(sdfData, "sdf");
+  //   viewer.setStyle({}, {stick: {}});
+  //   viewer.zoomTo();
+  //   viewer.render();
+  // };
   
   const resetView = () => {
     if (viewer) {
@@ -89,54 +75,61 @@ function MoleculeInfo(props) {
     let checkInterval = setInterval(function () {
       let iframe = document.getElementById("iframe");
       if (iframe.contentWindow && iframe.contentWindow.marvin) {
-        setSketcher(iframe.contentWindow.marvin.sketcherInstance);
+        let localSketcherInstance = iframe.contentWindow.marvin.sketcherInstance
+        setSketcher(localSketcherInstance);
         clearInterval(checkInterval);
+        if (localStorage[cidsKey]){
+          loadCompound(localSketcherInstance)
+        }
       }
     }, 200);
   }
   
-  async function search() {
+  async function search(outputCompoundInfo) {
     try {
       abortControllerRef.current.abort();
       abortControllerRef.current = new AbortController();
-      
-      let drawnCompound = await sketcher.exportStructure("mrv");
-      const res = await axios.post("https://openbabel.cheminfo.org/v1/convert", {
-        input: drawnCompound,
-        inputFormat: "mrv -- Chemical Markup Language",
-        outputFormat: "can -- Canonical SMILES format"
-      });
-      const inputCompound = res.data.result.substring(0, res.data.result.indexOf('\t'));
-      if (inputCompound.includes('.')) {
-        setError("Please draw a single molecule");
-      } else {
-        setError("");
-        const res = await axios.get(pubChemPropertiesUrl(inputCompound));
-        const outputCompound = res.data.PropertyTable.Properties[0];
-        setCompound(outputCompound);
-        
-        const isomersRes = await axios.get(pubChemIsomersUrl(outputCompound.MolecularFormula));
-        let outputIsomers = isomersRes.data.PropertyTable.Properties
-            .filter(x => x.MolecularWeight === outputCompound.MolecularWeight && !x.SMILES.includes('.') && x.CID !== outputCompound.CID);
-        setAllIsomers(outputIsomers);
-        setVisibleIsomers(10);
-        
-        setIsomersContainerHeight();
-        
-        const infoResponse = await Promise.race([
-          axios.get(process.env.REACT_APP_API_BASE_URL + 'mol/info/' + outputCompound.Title, {
-            signal: abortControllerRef.current.signal
-          }),
-          new Promise((_, reject) =>
-              setTimeout(() => reject(new Error('Timeout after 30s')), 30000)
-          )
-        ]);
-        if (isMountedRef.current) {
-          setApiData(infoResponse.data);
-          setTimeout(function(){
-            setIsomersContainerHeight();
-          }, 200);
+      console.log(outputCompoundInfo)
+      if (!outputCompoundInfo) {
+        let drawnCompound = await sketcher.exportStructure("mrv");
+        const res = await axios.post("https://openbabel.cheminfo.org/v1/convert", {
+          input: drawnCompound,
+          inputFormat: "mrv -- Chemical Markup Language",
+          outputFormat: "can -- Canonical SMILES format"
+        });
+        const inputCompound = res.data.result.substring(0, res.data.result.indexOf('\t'));
+        if (inputCompound.includes('.')) {
+          setError("Please draw a single molecule");
+          return;
         }
+        
+        setError("");
+        const compoundPropertiesRes = await axios.get(pubChemPropertiesUrl(inputCompound));
+        outputCompoundInfo = compoundPropertiesRes.data.PropertyTable.Properties[0];
+        setCompoundInfo(outputCompoundInfo);
+      }
+      console.log(outputCompoundInfo)
+      const isomersRes = await axios.get(pubChemIsomersUrl(outputCompoundInfo.MolecularFormula));
+      let outputIsomers = isomersRes.data.PropertyTable.Properties
+          .filter(x => x.MolecularWeight === outputCompoundInfo.MolecularWeight && !x.SMILES.includes('.') && x.CID !== outputCompoundInfo.CID);
+      setAllIsomers(outputIsomers);
+      setVisibleIsomers(10);
+      
+      setIsomersContainerHeight();
+      
+      const infoResponse = await Promise.race([
+        axios.get(process.env.REACT_APP_API_BASE_URL + 'mol/info/' + outputCompoundInfo.Title, {
+          signal: abortControllerRef.current.signal
+        }),
+        new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('Timeout after 30s')), 30000)
+        )
+      ]);
+      if (isMountedRef.current) {
+        setApiData(infoResponse.data);
+        setTimeout(function(){
+          setIsomersContainerHeight();
+        }, 200);
       }
     } catch (e) {
       console.error(e);
@@ -168,6 +161,18 @@ function MoleculeInfo(props) {
     return () => container.removeEventListener('scroll', handleScroll);
   }, [allIsomers]);
   
+  function loadCompound(localSketcherInstance){
+    try {
+      let compoundJson = JSON.parse(localStorage[compoundKey])
+      setCompoundInfo(compoundJson)
+      console.log(compoundJson)
+      localSketcherInstance.importStructure("mol", localStorage[structureKey]);
+      search(compoundJson)
+    } catch (e) {
+      console.log(e)
+    }
+  }
+  
   useEffect(() => {
     if (document.readyState === 'complete') {
       loadSketcher();
@@ -188,29 +193,23 @@ function MoleculeInfo(props) {
             <iframe
                 id="iframe"
                 src="./marvinjs/editor.html"
-                style={{
-                  overflow: "hidden",
-                  width: "100%",
-                  height: "450px",
-                  border: "1px solid darkgray",
-                }}
-                className="mb-1"
+                className="mb-1 w-75"
             />
             <span className='text-danger mb-2'>{error}</span>
             <div>
               <button className='btn btn-primary' onClick={search}>Search</button>
             </div>
-            {compound && <>
-              <h2 className='align-self-center'>{compound.Title}</h2>
+            {compoundInfo && <>
+              <h2 className='align-self-center'>{compoundInfo.Title}</h2>
               <hr className='mb-4'/>
               <div className='w-100 d-flex flex-row'>
                 <div className='text-start col-4'>
-                  <p><strong>Molecular formula:</strong> {compound.MolecularFormula}</p>
-                  <p><strong>Molecular weight:</strong> {compound.MolecularWeight}</p>
-                  <p><strong>IUPAC Name:</strong><br/> {compound.IUPACName}</p>
+                  <p><strong>Molecular formula:</strong> {compoundInfo.MolecularFormula}</p>
+                  <p><strong>Molecular weight:</strong> {compoundInfo.MolecularWeight}</p>
+                  <p><strong>IUPAC Name:</strong><br/> {compoundInfo.IUPACName}</p>
                 </div>
                 <iframe id='coolFrame' className='col-8' style={{height: 400}} frameBorder="0"
-                        src={`https://embed.molview.org/v1/?mode=balls&cid=${compound.CID}&bg=white`}></iframe>
+                        src={`https://embed.molview.org/v1/?mode=balls&cid=${compoundInfo.CID}&bg=white`}></iframe>
               </div>
               <div className='text-start'>
                 <p><strong>Physical appearance:</strong> {apiData ? apiData.physicalAppearance : 'Loading...'}</p>
@@ -219,7 +218,7 @@ function MoleculeInfo(props) {
             </>}
           </div>
           <div className='col-5 offset-1 d-flex flex-column align-items-start'>
-            {compound && <>
+            {compoundInfo && <>
               <h3 id='isomers-heading' className='align-self-center mb-4'>Isomers</h3>
               <div className='w-100'>
                 <div id='isomers-container'

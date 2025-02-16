@@ -1,6 +1,7 @@
 .reaction-btn{
     outline: none;
     border: none;
+    height: 17% !important;
 }
 
 .reaction-btn:hover{
@@ -12,10 +13,24 @@
 }
 
 .reaction-container{
-    height: 100%;
+    margin-left: calc(100%/24);
+    margin-right: calc(100%/24);
+    width: 20% !important;
+    aspect-ratio: 20/calc(37.5*0.95);
 }
 
 .reaction-list{
-    height: 100%;
-    overflow: auto;
+    overflow-y: scroll;
+    scrollbar-width: none; /* For Firefox */
+    -ms-overflow-style: none; /* For Internet Explorer/Edge */
+}
+.reaction-list::-webkit-scrollbar {
+    display: none; /* For Chrome, Safari, and Opera */
+}
+
+#iframe{
+    overflow: hidden;
+    aspect-ratio: 1/0.95;
+    border: 1px solid darkgray;
+    width: 37.5%;
 }

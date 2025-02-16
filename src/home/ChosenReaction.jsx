@@ -18,6 +18,13 @@ function ChosenReaction({
     smiles = `>C>C  __{'textBelowArrow': 'кат. ${catalyst}, ${conditions} 2) ${followUp}', 'textAboveArrow': '1) ${reagentVisualised}'}__`;
   }
   
+  useEffect(() => {
+    window.SmiDrawer.apply();
+    document.querySelectorAll('.reaction-svg').forEach((svg) => {
+      svg.setAttribute("viewBox", "0 0 120 40");
+    });
+  }, []);
+  
   function onReactionClick() {
     setReaction(null);
     setProduct(null);
