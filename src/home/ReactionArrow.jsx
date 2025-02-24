@@ -2,11 +2,18 @@ import React from 'react';
 
 function ReactionArrow({reagent, catalyst, conditions, followUp = "", reagentVisualised, onReactionClick}) {
   let smiles;
-  if (followUp === ""){
-    smiles = `>C>C  __{'textBelowArrow': 'кат. ${catalyst}, ${conditions}', 'textAboveArrow': '${reagentVisualised}'}__`;
-  }else {
-    smiles = `>C>C  __{'textBelowArrow': 'кат. ${catalyst}, ${conditions} 2) ${followUp}', 'textAboveArrow': '1) ${reagentVisualised}'}__`;
+  let textBelow = ''
+  if (catalyst !== ''){
+    textBelow += `кат. ${catalyst}, `
   }
+  if (conditions !== ''){
+    textBelow += `${conditions}, `
+  }
+  if (followUp !== ''){
+    textBelow += `2) ${followUp}, `
+  }
+  textBelow = textBelow.slice(0, -2);
+  smiles = `>C>C  __{'textBelowArrow': '${textBelow}', 'textAboveArrow': '${reagentVisualised}'}__`;
   
   return (
       <svg

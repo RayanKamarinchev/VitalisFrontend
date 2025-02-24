@@ -79,7 +79,7 @@ function Review(props) {
                               <p
                                   key={index}
                                   className={'answer edit ' + (currentQuestion.answerIndexes[index] ? 'selected ' : '')
-                                      + (currentQuestion.correctAnswers.includes(index) ? 'correct' : '')}>
+                                      + (currentQuestion.correctAnswersArray[index] ? 'correct' : '')}>
                                 {option}
                               </p>
                           ))}

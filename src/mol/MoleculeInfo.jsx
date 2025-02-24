@@ -45,25 +45,6 @@ function MoleculeInfo() {
     }
   };
   
-  // const loadStructure = async () => {
-  //   if (!viewer) return;
-  //
-  //   viewerRef.current.innerHTML = '';
-  //
-  //   const response = await fetch(
-  //       `https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/${cid}/SDF?record_type=3d`
-  //   );
-  //
-  //   if (!response.ok) throw new Error('Failed to fetch structure');
-  //
-  //   const sdfData = await response.text();
-  //
-  //   viewer.addModel(sdfData, "sdf");
-  //   viewer.setStyle({}, {stick: {}});
-  //   viewer.zoomTo();
-  //   viewer.render();
-  // };
-  
   function loadSketcher() {
     let checkInterval = setInterval(function () {
       let iframe = document.getElementById("iframe");
