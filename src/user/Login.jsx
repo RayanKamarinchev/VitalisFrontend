@@ -40,7 +40,7 @@ const Login = () => {
             <div className="row  justify-content-center">
               <div className="col-md-7 mt-5">
                 <h3>Login to <strong style={{fontSize: "inherit"}}>Vitalis</strong></h3>
-                <p className="mb-4">Lorem ipsum dolor sit amet elit. Sapiente sit aut eos consectetur adipisicing.</p>
+                <p className="mb-4">The best way to learn it is to practice it.</p>
                 <form onSubmit={handleSubmitEvent}>
                   <div className="form-group first">
                     <label htmlFor="email">Email</label>
