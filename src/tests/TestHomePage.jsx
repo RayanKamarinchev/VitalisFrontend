@@ -45,7 +45,7 @@ function TestHomePage() {
       <div>
         <main className="cd-main-content">
           <div className="floating-container">
-            <Link className="floating-button" to="create">+</Link>
+            <Link className="floating-button text-decoration-none" to="create">+</Link>
           </div>
           <section className="cd-gallery">
             <ul style={{width: "100%"}}>

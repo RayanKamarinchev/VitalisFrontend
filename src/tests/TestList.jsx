@@ -29,16 +29,17 @@ function TestList({tests}) {
                         <span>Questions: <strong>{(t.questionsCount)}</strong></span>
                       </li>
                       <li className={"test-info"}>
-                        {t.isCreator ? (
-                            <Link className={"text-decoration-underline"}
-                                  to={urlBuilder("/examiners", {
-                                    testId: t.id
-                                  })}>
-                              Examinees: <strong>{t.testTakers}</strong>
-                            </Link>
-                        ) : (
-                            <p>Examinees: <strong>{t.testTakers}</strong></p>
-                        )}
+                        {/*{t.isCreator ? (*/}
+                        {/*    <Link className={"text-decoration-underline"}*/}
+                        {/*          to={urlBuilder("/examiners", {*/}
+                        {/*            testId: t.id*/}
+                        {/*          })}>*/}
+                        {/*      Examinees: <strong>{t.testTakers}</strong>*/}
+                        {/*    </Link>*/}
+                        {/*) : (*/}
+                        {/*    <p>Examinees: <strong>{t.testTakers}</strong></p>*/}
+                        {/*)}*/}
+                        <p>Examinees: <strong>{t.testTakers}</strong></p>
                       </li>
                     </ol>
                     <div className={"test-btns d-flex justify-content-start"}>
