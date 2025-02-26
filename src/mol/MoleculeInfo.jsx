@@ -63,8 +63,7 @@ function MoleculeInfo() {
     try {
       abortControllerRef.current.abort();
       abortControllerRef.current = new AbortController();
-      console.log(outputCompoundInfo)
-      if (!outputCompoundInfo) {
+      if (typeof(outputCompoundInfo) !== 'string') {
         let drawnCompound = await sketcher.exportStructure("mrv");
         const res = await axios.post("https://openbabel.cheminfo.org/v1/convert", {
           input: drawnCompound,
@@ -72,6 +71,7 @@ function MoleculeInfo() {
           outputFormat: "can -- Canonical SMILES format"
         });
         const inputCompound = res.data.result.substring(0, res.data.result.indexOf('\t'));
+        console.log(inputCompound)
         if (inputCompound.includes('.')) {
           setError("Please draw a single molecule");
           return;
