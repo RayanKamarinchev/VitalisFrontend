@@ -23,6 +23,7 @@ function Create(props) {
   
   const handleInput = (e) => {
     let {name, value} = e.target;
+    console.log({name, value})
     if (name[0] === formChoiceIdentifier) {
       let [realName, index] = name.split(formChoiceIdentifier).slice(1);
       let newArray = input[realName]
@@ -34,6 +35,7 @@ function Create(props) {
     } else if (value === 'off') {
       value = false
     }
+    
     setInput({...input, [name]: value})
     setErrors({...errors, [name]: ''});
   };
@@ -48,7 +50,7 @@ function Create(props) {
     e.preventDefault();
     let resp = await submitForm('tests/create', input, setErrors, auth.token);
     if (resp){
-      navigate(resp.data)
+      navigate('/tests/edit/' + resp.data)
     }
   }
   return (
@@ -56,12 +58,12 @@ function Create(props) {
         <div className="col-sm-12 offset-lg-2 col-lg-8 offset-xl-4 col-xl-4 mb-5">
           <form onSubmit={handleSubmitEvent}>
             <FormCheckbox name="isPublic" text="Is public" errors={errors} handleInput={handleInput}/>
-            <FormInput name="title" text="Title" errors={errors} handleInput={handleInput}/>
-            <FormChoice name="groups" text="Groups" options={groups} handleInput={handleInput} errors={errors}/>
+            <FormInput name="title" text="Title" errors={errors} handleInput={handleInput} value={input.title}/>
+            <FormChoice name="groups" text="Groups" options={groups} handleInput={handleInput} errors={errors} value={input.groups}/>
             <FormTextarea name="description" handleInput={handleInput} errors={errors}/>
             <FormSelect name="grade" options={grades} handleInput={handleInput} errors={errors}/>
             <div className="text-center">
-              <button className="btn btn-primary mt-3" type="submit" value="Save">Продължи</button>
+              <button className="btn btn-primary mt-3" type="submit" value="Save">Continue</button>
             </div>
           </form>
         </div>

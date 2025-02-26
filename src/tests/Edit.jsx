@@ -146,7 +146,6 @@ function Edit() {
   async function handleInput(e) {
     let {name, value} = e.target;
     setTest({...test, [name]: value})
-    setErrors({...errors, [name]: ''});
   }
   
   useEffect(() => {

@@ -1,7 +1,7 @@
 import React from 'react';
 import {formChoiceIdentifier} from "../util/constants";
 
-function FormChoice({name, text, options, handleInput, value}) {
+function FormChoice({name, text, options, handleInput, value=options.map(() => false)}) {
   return (
       <div className="list-group">
         <p className='align-self-start'>{text}</p>
